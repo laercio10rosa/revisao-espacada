@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import Combobox from '../components/Combobox'
+import { acharDisciplina, opcoesDisciplinas, opcoesTopicos } from '../data/catalogo'
 import {
   createCiclo,
   deleteCiclo,
@@ -11,7 +13,6 @@ import {
 import {
   INTERVALOS_PADRAO,
   cronograma,
-  dataBaseDeRevisao,
   dataDoCiclo,
   descreverPrazo,
   diaDaSemana,
@@ -270,7 +271,7 @@ function Linha({ item, intervalos, aberto, onToggle, onConcluir, onDesfazer, onE
             {item.materia}
           </button>
         </td>
-        <td data-label="Tópico">{item.topico || <span className="muted">—</span>}</td>
+        <td data-label="Tópico" title={item.topico}>{item.topico || <span className="muted">—</span>}</td>
         <td data-label="Ciclo">
           <div className="ciclo">
             <span className="ciclo-num">{concluido ? `${total}/${total}` : `${item.ciclo}/${total}`}</span>
@@ -359,15 +360,24 @@ function FormEstudo({ titulo = 'Novo estudo', inicial, intervalos, materias, onS
   const [materia, setMateria] = useState(inicial?.materia ?? '')
   const [topico, setTopico] = useState(inicial?.topico ?? '')
   const [ciclo, setCiclo] = useState(inicial?.ciclo ?? 1)
-  const [modo, setModo] = useState('base') // 'base' | 'revisao'
   const [data, setData] = useState(inicial?.dataBase ?? hojeISO())
   const [salvando, setSalvando] = useState(false)
 
+  const disciplina = acharDisciplina(materia)
+  const opcoesMateria = useMemo(() => opcoesDisciplinas(materias), [materias])
+  const opcoesTopico = useMemo(() => opcoesTopicos(disciplina), [disciplina])
+
+  function trocarMateria(nova) {
+    const novaDisc = acharDisciplina(nova)
+    // se o tópico veio da ementa da matéria anterior, limpa
+    if (disciplina && novaDisc !== disciplina && opcoesTopico.some((o) => o.value === topico)) {
+      setTopico('')
+    }
+    setMateria(nova)
+  }
+
   const cicloValido = Math.min(Math.max(1, Number(ciclo)), intervalos.length + 1)
-  const completo = cicloValido > intervalos.length
-  const dataBase = data && modo === 'revisao' && !completo ? dataBaseDeRevisao(data, cicloValido, intervalos) : data
-  const proxima = data && !completo ? dataDoCiclo(dataBase, cicloValido, intervalos) : null
-  const dias = proxima ? diasEntre(hojeISO(), proxima) : null
+  const dataBase = data
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -378,7 +388,6 @@ function FormEstudo({ titulo = 'Novo estudo', inicial, intervalos, materias, onS
       if (!inicial) {
         setTopico('')
         setCiclo(1)
-        setModo('base')
         setData(hojeISO())
       }
     } finally {
@@ -392,22 +401,23 @@ function FormEstudo({ titulo = 'Novo estudo', inicial, intervalos, materias, onS
       <div className="grid-form">
         <label>
           <span>Matéria</span>
-          <input
-            list="lista-materias"
-            placeholder="Ex.: Direito Tributário"
+          <Combobox
+            placeholder="Escolha a matéria"
             value={materia}
-            onChange={(e) => setMateria(e.target.value)}
+            onChange={trocarMateria}
+            options={opcoesMateria}
             required
           />
-          <datalist id="lista-materias">
-            {materias.map((m) => (
-              <option key={m} value={m} />
-            ))}
-          </datalist>
         </label>
         <label>
           <span>Tópico / capítulos</span>
-          <input placeholder="Ex.: 21-25" value={topico} onChange={(e) => setTopico(e.target.value)} />
+          <Combobox
+            placeholder={disciplina ? 'Escolha o tópico ou digite (ex.: 21-25)' : 'Ex.: 21-25'}
+            value={topico}
+            onChange={setTopico}
+            options={opcoesTopico}
+            emptyText={disciplina ? 'Nada encontrado — o texto digitado será usado.' : 'Sem ementa cadastrada para esta matéria — digite livremente.'}
+          />
         </label>
         <label>
           <span>Ciclo atual</span>
@@ -421,45 +431,10 @@ function FormEstudo({ titulo = 'Novo estudo', inicial, intervalos, materias, onS
           </select>
         </label>
         <label>
-          <span>{modo === 'base' ? 'Data base (dia do estudo)' : 'Data da próxima revisão'}</span>
+          <span>Data base (dia do estudo)</span>
           <input type="date" value={data} onChange={(e) => setData(e.target.value)} required />
         </label>
-      </div>
-
-      <div className="form-footer">
-        <label className="check">
-          <input
-            type="checkbox"
-            checked={modo === 'revisao'}
-            onChange={(e) => {
-              const novo = e.target.checked ? 'revisao' : 'base'
-              if (data && !completo) {
-                setData(novo === 'revisao' ? dataDoCiclo(data, cicloValido, intervalos) : dataBase)
-              }
-              setModo(novo)
-            }}
-          />
-          Já sei a data da próxima revisão (calcular a data base)
-        </label>
-
-        <div className="preview" aria-live="polite">
-          {completo ? (
-            <span>Todos os ciclos concluídos.</span>
-          ) : proxima ? (
-            <>
-              {modo === 'revisao' && (
-                <span className="muted">Data base: {formatarData(dataBase)} · </span>
-              )}
-              Próxima revisão:{' '}
-              <strong>
-                {diaDaSemana(proxima)}, {formatarData(proxima)}
-              </strong>{' '}
-              <span className="muted">({descreverPrazo(dias)})</span>
-            </>
-          ) : null}
-        </div>
-
-        <div className="form-actions">
+        <div className="form-actions grid-acoes">
           {onCancelar && (
             <button type="button" className="btn ghost" onClick={onCancelar}>
               Cancelar
