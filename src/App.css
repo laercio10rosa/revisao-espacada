@@ -208,8 +208,24 @@
 /* ---------- Formulário ---------- */
 .grid-form {
   display: grid;
-  grid-template-columns: 2fr 1.2fr 1.4fr 1.3fr;
+  grid-template-columns: 1.4fr 2fr 1.15fr 1.05fr auto;
   gap: 0.85rem;
+  align-items: end;
+}
+
+.grid-acoes {
+  margin-left: 0;
+  flex-wrap: nowrap;
+}
+
+.grid-acoes .btn {
+  min-height: 38px;
+}
+
+.modal .grid-acoes {
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
 }
 
 .grid-form label,
@@ -706,6 +722,110 @@
   flex-wrap: wrap;
 }
 
+/* ---------- Combobox (matéria / tópico) ---------- */
+.combo {
+  position: relative;
+}
+
+.combo input {
+  width: 100%;
+  padding-right: 2.2rem;
+}
+
+.combo-toggle {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  display: grid;
+  place-items: center;
+}
+
+.combo-toggle:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.combo-lista {
+  position: absolute;
+  z-index: 40;
+  left: 0;
+  top: calc(100% + 4px);
+  min-width: 100%;
+  width: max-content;
+  max-width: min(520px, 90vw);
+  max-height: 320px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(16, 24, 40, 0.14);
+}
+
+.combo-grupo {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-3);
+  padding: 0.55rem 0.6rem 0.25rem;
+}
+
+.combo-opcao {
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.combo-opcao.sub {
+  padding-left: 1.5rem;
+  color: var(--text-2);
+  font-size: 0.86rem;
+}
+
+.combo-opcao.ativo {
+  background: var(--primary-soft);
+  color: var(--text);
+}
+
+.combo-opcao.atual {
+  font-weight: 600;
+}
+
+.combo-vazio {
+  padding: 0.6rem;
+  color: var(--text-3);
+  font-size: 0.85rem;
+}
+
+.hint {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--text-3);
+}
+
+.form-footer .form-actions:only-child {
+  margin-left: auto;
+}
+
+.tabela td[data-label='Tópico'] {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ---------- Responsivo ---------- */
 @media (max-width: 900px) {
   .stats {
@@ -714,6 +834,11 @@
 
   .grid-form {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .grid-acoes {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
   }
 }
 
