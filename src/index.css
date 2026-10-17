@@ -1,16 +1,39 @@
 :root {
-  --text: #e5e7eb;
-  --bg: #16171d;
-  --border: #2e303a;
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f1f3f6;
+  --border: #e3e6eb;
+  --border-strong: #cfd4dc;
+  --text: #1c2330;
+  --text-2: #5b6474;
+  --text-3: #8a93a3;
 
-  font: 16px/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
-  color-scheme: dark;
+  --primary: #2f6fed;
+  --primary-hover: #245bd0;
+  --primary-soft: #e8f0fe;
+
+  --red: #d64545;
+  --red-soft: #fdecec;
+  --orange: #d9730d;
+  --orange-soft: #fff1e3;
+  --amber-soft: #fff8e6;
+  --blue-soft: #eaf2ff;
+  --green: #2e9b5f;
+  --green-soft: #e6f6ed;
+
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.06);
+
+  font: 15px/1.5 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: light;
   color: var(--text);
   background: var(--bg);
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
   margin: 0;
+  background: var(--bg);
 }
 
 #root {
@@ -20,29 +43,61 @@ body {
 }
 
 h1 {
-  font-size: 1.75rem;
-  margin: 0 0 1rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.25rem;
+}
+
+h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.9rem;
 }
 
 input,
+select,
 button {
   font: inherit;
-  border-radius: 6px;
-  border: 1px solid var(--border);
+  color: inherit;
+}
+
+input,
+select {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+  min-height: 38px;
+  box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
 button {
   cursor: pointer;
-  background: #2e303a;
-  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
   padding: 0.5rem 0.9rem;
 }
 
-input {
-  background: #1f2028;
-  color: var(--text);
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 a {
-  color: #61dafb;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }

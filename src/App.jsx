@@ -1,8 +1,9 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, NavLink, Route, Routes } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import PrivateRoute from './components/PrivateRoute'
 import Login from './pages/Login'
 import Decks from './pages/Decks'
+import Ciclos from './pages/Ciclos'
 import DeckDetail from './pages/DeckDetail'
 import Review from './pages/Review'
 import SetupNeeded from './pages/SetupNeeded'
@@ -14,10 +15,22 @@ function Header() {
   if (!user) return null
   return (
     <header className="app-header">
-      <span>Revisão Espaçada</span>
-      <button className="link" onClick={logout}>
-        sair ({user.email})
-      </button>
+      <div className="brand">
+        <span className="brand-mark">R</span>
+        <span>Revisão Espaçada</span>
+      </div>
+      <nav className="nav">
+        <NavLink to="/" end>
+          Ciclos
+        </NavLink>
+        <NavLink to="/baralhos">Flashcards</NavLink>
+      </nav>
+      <div className="user">
+        <span className="user-email">{user.email}</span>
+        <button className="btn ghost btn-sm" onClick={logout}>
+          Sair
+        </button>
+      </div>
     </header>
   )
 }
@@ -32,6 +45,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route
           path="/"
+          element={
+            <PrivateRoute>
+              <Ciclos />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/baralhos"
           element={
             <PrivateRoute>
               <Decks />
