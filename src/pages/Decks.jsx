@@ -22,10 +22,10 @@ export default function Decks() {
 
   return (
     <div className="page">
-      <h1>Meus baralhos</h1>
+      <h1>Meus flashcards</h1>
       <form className="inline-form" onSubmit={handleCreate}>
         <input
-          placeholder="Nome do novo baralho"
+          placeholder="Nome do novo grupo de flashcards"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -41,7 +41,7 @@ export default function Decks() {
             </button>
           </li>
         ))}
-        {decks.length === 0 && <p>Nenhum baralho ainda. Crie o primeiro acima.</p>}
+        {decks.length === 0 && <p>Nenhum flashcard ainda. Crie o primeiro acima.</p>}
       </ul>
     </div>
   )

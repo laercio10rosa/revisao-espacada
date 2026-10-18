@@ -38,7 +38,7 @@ export default function Review() {
       <div className="page">
         <h1>Revisão concluída</h1>
         <p>Não há mais cartões pendentes agora. Volte mais tarde.</p>
-        <Link to={`/decks/${deckId}`}>&larr; voltar ao baralho</Link>
+        <Link to={`/decks/${deckId}`}>&larr; voltar aos flashcards</Link>
       </div>
     )
   }

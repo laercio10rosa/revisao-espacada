@@ -25,7 +25,7 @@ export default function DeckDetail() {
 
   return (
     <div className="page">
-      <Link to="/baralhos">&larr; voltar aos baralhos</Link>
+      <Link to="/baralhos">&larr; voltar aos flashcards</Link>
       <h1>Cartões</h1>
 
       <form className="card-form" onSubmit={handleCreate}>
